@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BisonBank ATM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- Back to Top -->
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div class="app-wrapper">
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="#" class="navbar-brand" id="brandLink">
+                <span class="logo-icon"><i class="fas fa-landmark"></i></span>
+                BisonBank
+            </a>
+            <div class="navbar-links">
+                <button class="active" data-page="atm"><i class="fas fa-display"></i> ATM</button>
+                <button data-page="features"><i class="fas fa-book-open"></i> Features</button>
+                <button data-page="developers"><i class="fas fa-users"></i> Developers</button>
+            </div>
+            <div class="navbar-status">
+                <span class="dot"></span>
+                <span>Online</span>
+            </div>
+        </nav>
+
+        <!-- PAGE: ATM -->
+        <div class="page-container" id="page-atm">
+            <!-- Mode Toggle -->
+            <div class="mode-toggle">
+                <span class="mode-label"><i class="fas fa-user"></i> User</span>
+                <div class="toggle-switch" id="modeToggle">
+                    <div class="toggle-slider"></div>
+                </div>
+                <span class="mode-label"><i class="fas fa-user-cog"></i> Admin</span>
+                <span class="mode-status" id="modeStatus">Current: User</span>
+            </div>
+
+            <div class="atm-grid">
+                <!-- Screen -->
+                <div class="atm-screen-wrapper">
+                    <div class="atm-screen" id="atmScreen">
+                        <div class="atm-screen-header">
+                            <span><i class="fas fa-display" style="margin-right:10px;"></i>ATM Terminal</span>
+                            <span class="badge" id="roleBadge"><i class="fas fa-circle"
+                                    style="font-size:8px;margin-right:6px;color:#00d4ff;"></i> User</span>
+                        </div>
+                        <div class="atm-display" id="screenContent">
+                            <span class="prompt">></span> Welcome to <span style="color:#00d4ff;">BisonBank</span>
+                            ATM.<br />
+                            <span class="prompt">></span> Type <span style="color:#fbbf24;">HELP</span> for commands or
+                            use the keypad.
+                        </div>
+                        <div class="atm-input-row">
+                            <input type="text" id="commandInput" placeholder="Enter command..." autofocus />
+                            <button id="enterBtn"><i class="fas fa-arrow-right"></i> Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keypad -->
+                <div class="atm-keypad-wrapper">
+                    <div class="atm-keypad" id="keypad">
+                        <!-- Dynamic buttons -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: FEATURES -->
+        <div class="page-container hidden" id="page-features">
+            <div class="features-header">
+                <h2><i class="fas fa-terminal" style="color:#00d4ff;margin-right:14px;"></i>Command Reference</h2>
+                <p class="text-muted">Search commands, copy to clipboard, and dive into compiler internals.</p>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="commandSearch" placeholder="Filter commands..." />
+                </div>
+            </div>
+
+            <div class="command-grid" id="commandGrid"></div>
+
+            <!-- Nerd Notes Accordion -->
+            <div class="nerd-section">
+                <h3><i class="fas fa-microchip"></i> Nerd Notes — Compiler Design Deep Dive</h3>
+                <div class="accordion">
+                    <div class="accordion-item active">
+                        <button class="accordion-header">
+                            <span><i class="fas fa-code"></i> Flex — Lexical Analysis (Detailed)</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-body">
+                            <p><strong>File:</strong> <code>atm.l</code></p>
+                            <p>Flex is a <strong>lexical analyzer generator</strong>. It takes a set of regular
+                                expressions and produces C code that scans input and returns tokens.</p>
+                            <ul>
+                                <li><strong>Rules:</strong> Each rule is a pattern (regex) followed by an action. For
+                                    example, <code>"CREATE"</code> matches the literal string and returns the token
+                                    <code>CREATE</code>.
+                                </li>
+                                <li><strong>yylval:</strong> A global variable used to pass semantic values (e.g., the
+                                    number value for <code>NUMBER</code>) to the parser.</li>
+                                <li><strong>yylineno:</strong> Tracks the current line number for error reporting.</li>
+                                <li><strong>Whitespace:</strong> Ignored via <code>[ \t]+</code> to keep the token
+                                    stream clean.</li>
+                                <li><strong>Newline:</strong> Returned as <code>NEWLINE</code> so the parser knows when
+                                    a command ends.</li>
+                            </ul>
+                            <p><strong>Token Flow Example:</strong> The input
+                                <code>CREATE ACCOUNT John 1234 Dhaka secret</code> becomes the token stream:
+                                <code>CREATE</code>, <code>ACCOUNT</code>, <code>NAME("John")</code>,
+                                <code>NUMBER(1234)</code>, <code>NAME("Dhaka")</code>, <code>NAME("secret")</code>,
+                                <code>NEWLINE</code>.
+                            </p>
+                            <div class="expert-note">
+                                <strong><i class="fas fa-lightbulb"></i> Expert Insight</strong>
+                                <p>Flex uses <strong>DFA (Deterministic Finite Automaton)</strong> to efficiently match
+                                    patterns. The <code>%option yylineno</code> adds line counting, which is crucial for
+                                    debugging. The lexer is the first stage of the compiler pipeline, converting raw
+                                    text into a structured token stream.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span><i class="fas fa-sitemap"></i> Bison — Grammar &amp; Actions (Detailed)</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-body">
+                            <p><strong>File:</strong> <code>atm.y</code></p>
+                            <p>Bison is a <strong>parser generator</strong> that builds an <strong>LR(1)</strong> parser
+                                from a context‑free grammar. It defines the syntactic structure of the language and
+                                executes C code actions when rules are matched.</p>
+                            <ul>
+                                <li><strong>Grammar Rules:</strong> Each rule has a left‑hand side (non‑terminal) and a
+                                    right‑hand side (terminals and non‑terminals). For example,
+                                    <code>statement: create_account | login | ...</code>
+                                </li>
+                                <li><strong>Semantic Actions:</strong> C code enclosed in <code>{ ... }</code> that runs
+                                    when the rule is reduced. Actions access rule components using <code>$1</code>,
+                                    <code>$2</code>, etc., and set the result via <code>$$</code>.
+                                </li>
+                                <li><strong>%union:</strong> Defines the possible types for tokens and non‑terminals
+                                    (e.g., <code>int num</code> for <code>NUMBER</code>, <code>char* str</code> for
+                                    <code>NAME</code>).
+                                </li>
+                                <li><strong>Session State:</strong> Global variables (e.g., <code>state</code>,
+                                    <code>current_ac_index</code>) are updated within actions to maintain login status
+                                    and transaction context.
+                                </li>
+                            </ul>
+                            <p><strong>Parsing Example:</strong> The token stream from the lexer is fed into Bison. When
+                                it matches the rule <code>create_account: CREATE ACCOUNT name NUMBER name name</code>,
+                                the action creates a new account in the <code>accounts</code> array, assigns a number,
+                                and prints a success message.</p>
+                            <div class="expert-note">
+                                <strong><i class="fas fa-lightbulb"></i> Expert Insight</strong>
+                                <p>Bison’s <strong>LR(1)</strong> parsing is powerful enough to handle complex grammars.
+                                    The <code>%type</code> directives ensure type safety between tokens and
+                                    non‑terminals. This is a classic implementation of a <strong>command‑line
+                                        interpreter</strong> using compiler construction techniques.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span><i class="fab fa-js"></i> JavaScript — Frontend &amp; Backend Integration</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-body">
+                            <p><strong>Files:</strong> <code>server.js</code> · <code>script.js</code> ·
+                                <code>index.html</code>
+                            </p>
+                            <p>The <strong>Node.js</strong> server spawns the compiled ATM binary as a child process,
+                                piping stdin/stdout. Each command sent via the web UI is written to the process, and the
+                                output is captured and returned to the frontend.</p>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
+                                <div class="expert-note" style="border-left-color:#00d4ff;">
+                                    <strong><i class="fas fa-server"></i> Server (Node + Express)</strong>
+                                    <p>Uses <code>spawn()</code> to launch the ATM. A buffer collects stdout/stderr and
+                                        a <code>setTimeout</code> flushes after 500ms of silence — this ensures complete
+                                        command output. REST endpoint <code>/command</code> accepts POST requests.</p>
+                                </div>
+                                <div class="expert-note" style="border-left-color:#34d399;">
+                                    <strong><i class="fas fa-palette"></i> Frontend (HTML + CSS + JS)</strong>
+                                    <p>Vanilla JS with <code>fetch()</code> to talk to the server. Keypad buttons are
+                                        dynamically generated based on user/admin mode. The display updates in real‑time
+                                        with a monospace terminal look.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span><i class="fas fa-project-diagram"></i> System Architecture</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-body">
+                            <p style="font-size:15px;color:var(--text-secondary);">
+                                <strong>User</strong> → (Web UI) → <strong>Node.js Server</strong> → (stdin) →
+                                <strong>ATM Binary</strong> (Flex + Bison) → (stdout) → <strong>Server</strong> → (JSON)
+                                → <strong>UI</strong>
+                            </p>
+                            <p style="font-size:14px;color:var(--text-secondary);margin-top:8px;">
+                                The ATM binary is compiled from <code>atm.l</code> and <code>atm.y</code> using Flex and
+                                Bison. It maintains in‑memory account data, session state, and transaction history. The
+                                web server acts as a bridge, making the command‑line tool accessible via a beautiful
+                                interface.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: DEVELOPERS -->
+        <div class="page-container hidden" id="page-developers">
+            <div class="dev-header">
+                <div class="team-banner">
+                    <span class="team-icon"><i class="fas fa-code-branch"></i></span>
+                    <h1>Team BisonForge</h1>
+                    <p class="tagline">Building the future of ATM simulations, one token at a time.</p>
+                </div>
+            </div>
+
+            <!-- Course & Instructor -->
+            <div class="course-info-grid">
+                <div class="course-info-card glass-card">
+                    <h4><i class="fas fa-graduation-cap" style="color:#00d4ff;margin-right:10px;"></i>Course</h4>
+                    <p><span class="label">Code</span><br /><strong>CSE314</strong></p>
+                    <p><span class="label">Name</span><br />Compiler Design Lab</p>
+                    <p style="margin-top:8px;font-size:13px;color:var(--text-secondary);">
+                        This project is part of the course work for Compiler Design Lab, where we implement a
+                        full‑featured ATM simulator using Flex (lexical analysis) and Bison (syntax parsing). The system
+                        demonstrates real‑world application of compiler construction techniques, including tokenization,
+                        grammar definition, and semantic actions.
+                    </p>
+                </div>
+                <div class="course-info-card glass-card">
+                    <h4><i class="fas fa-chalkboard-teacher" style="color:#fbbf24;margin-right:10px;"></i>Course
+                        Instructor</h4>
+                    <div class="instructor-card">
+                        <div class="avatar-sm" style="background:rgba(251,191,36,0.12);color:#fbbf24;">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="info">
+                            <div class="name">Ms. Tamanna Sultana</div>
+                            <div class="title">Lecturer</div>
+                            <div class="dept">Department of Computer Science and Engineering</div>
+                            <div class="dept" style="font-size:12px;color:var(--text-secondary);">Faculty of Science and
+                                Information Technology <br> Daffodil International University</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Developer Cards -->
+            <div class="dev-grid" id="devGrid">
+                <!-- Lead -->
+                <div class="dev-card lead" data-developer="asik">
+                    <div class="dev-card-front">
+                        <div class="avatar"><img src="images/asik.jpg" alt="Asikur Rahman" /></div>
+                        <div class="name">Asikur Rahman</div>
+                        <div class="role">🌟 Lead Developer</div>
+                        <div class="id">242-15-164</div>
+                        <div class="links">
+                            <a href="https://asikafridi.vercel.app/" target="_blank" title="Portfolio"><i
+                                    class="fas fa-globe"></i></a>
+                            <a href="mailto:asikur242-15-164@diu.edu.bd" title="Email"><i
+                                    class="fas fa-envelope"></i></a>
+                        </div>
+                        <button class="expand-btn"><i class="fas fa-chevron-down"></i> Nerd Fact</button>
+                    </div>
+                    <div class="dev-card-back">
+                        <i class="fas fa-crown" style="font-size:28px;color:#fbbf24;margin-bottom:10px;"></i>
+                        <p>Architect of the ATM core logic. Integrated Flex, Bison, and Node.js to build a seamless
+                            simulation.</p>
+                    </div>
+                </div>
+
+                <!-- Member 1 -->
+                <div class="dev-card" data-developer="ashraful">
+                    <div class="dev-card-front">
+                        <div class="avatar"><img src="images/ashraful.jpg" alt="Md. Ashraful Islam" /></div>
+                        <div class="name">Md. Ashraful Islam</div>
+                        <div class="role">Team Member</div>
+                        <div class="id">242-15-132</div>
+                        <div class="links">
+                            <a href="mailto:islam242-15-132@diu.edu.bd" title="Email"><i
+                                    class="fas fa-envelope"></i></a>
+                        </div>
+                        <button class="expand-btn"><i class="fas fa-chevron-down"></i> Nerd Fact</button>
+                    </div>
+                    <div class="dev-card-back">
+                        <i class="fas fa-database" style="font-size:28px;color:#00d4ff;margin-bottom:10px;"></i>
+                        <p>Designed the account data structure and implemented the transaction history feature.</p>
+                    </div>
+                </div>
+
+                <div class="dev-card" data-developer="dristy">
+                    <div class="dev-card-front">
+                        <div class="avatar"><img src="images/dristy.jpg" alt="Dristy Saha" /></div>
+                        <div class="name">Dristy Saha</div>
+                        <div class="role">Team Member</div>
+                        <div class="id">242-15-348</div>
+                        <div class="links"><span class="text-muted" style="font-size:12px;">—</span></div>
+                        <button class="expand-btn"><i class="fas fa-chevron-down"></i> Nerd Fact</button>
+                    </div>
+                    <div class="dev-card-back">
+                        <i class="fas fa-paint-brush" style="font-size:28px;color:#00d4ff;margin-bottom:10px;"></i>
+                        <p>Crafted the modern, responsive UI and ensured a delightful user experience across devices.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="dev-card" data-developer="noman">
+                    <div class="dev-card-front">
+                        <div class="avatar"><img src="images/noman.jpg" alt="Khairul Hasan Noman" /></div>
+                        <div class="name">Khairul Hasan Noman</div>
+                        <div class="role">Team Member</div>
+                        <div class="id">242-15-620</div>
+                        <div class="links"><span class="text-muted" style="font-size:12px;">—</span></div>
+                        <button class="expand-btn"><i class="fas fa-chevron-down"></i> Nerd Fact</button>
+                    </div>
+                    <div class="dev-card-back">
+                        <i class="fas fa-shield-alt" style="font-size:28px;color:#00d4ff;margin-bottom:10px;"></i>
+                        <p>Implemented the 2FA and location‑based authorization logic, enhancing security.</p>
+                    </div>
+                </div>
+
+                <div class="dev-card" data-developer="tarek">
+                    <div class="dev-card-front">
+                        <div class="avatar"><img src="images/tarek.jpg" alt="M Tarek Rahman" /></div>
+                        <div class="name">M Tarek Rahman</div>
+                        <div class="role">Team Member</div>
+                        <div class="id">242-15-882</div>
+                        <div class="links"><span class="text-muted" style="font-size:12px;">—</span></div>
+                        <button class="expand-btn"><i class="fas fa-chevron-down"></i> Nerd Fact</button>
+                    </div>
+                    <div class="dev-card-back">
+                        <i class="fas fa-file-alt" style="font-size:28px;color:#00d4ff;margin-bottom:10px;"></i>
+                        <p>Developed the admin module and the “New Day” feature for resetting daily limits.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Updated Footer -->
+            <p
+                style="text-align:center;color:var(--text-secondary);font-size:13px;margin-top:40px;border-top:1px solid var(--glass-border);padding-top:20px;">
+                <i class="fas fa-code"></i> Built with Flex, Bison, Node.js &amp; vanilla JS &middot; Daffodil
+                International University &middot; 2026 &middot; <span style="color:var(--text-accent);">© Asikur
+                    Rahman</span>
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
